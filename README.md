@@ -1,1 +1,1 @@
-"# PyTorch_Boilerplate_Train_Test_Valid" 
+This repository consists of a boilerplate code for initializing model, training the model, testing it and also boilerplate for the dataloader class which returns the train, test and valid data.
