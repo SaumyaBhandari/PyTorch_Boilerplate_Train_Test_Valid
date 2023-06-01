@@ -7,7 +7,7 @@ from tqdm import tqdm
 import torch.nn.functional as F
 from tensorboardX import SummaryWriter
 
-from Network import Your_Network_Name
+from network import YourModelName
 from Dataloader import CustomDataLoader
 
 
@@ -20,7 +20,7 @@ MODEL_NAME = "Enter_The_Name_OF_Your_Model_Here"
 class Model():
  
     def __init__(self, trained=False):
-        self.model = YourModel().to(DEVICE)
+        self.model = YourModelName().to(DEVICE)
         if trained: self.model.load_state_dict(torch.load('path_to_your_saved_model', map_location=torch.device(DEVICE)))
         self.classes = {
             0: "Class-A", 
