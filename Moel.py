@@ -22,6 +22,18 @@ class Model():
     def __init__(self, trained=False):
         self.model = YourModel().to(DEVICE)
         if trained: self.model.load_state_dict(torch.load('path_to_your_saved_model', map_location=torch.device(DEVICE)))
+        self.classes = {
+            0: "Class-A", 
+            1: "Class-B",
+            2: "Class-C",
+            3: "Class-D",
+            4: "Class-E",
+            5: "Class-F",
+            6: "Class-G",
+            7: "Class-H",
+            8: "Class-I",
+            9: "Class-J",
+        }
 
 
 
@@ -181,6 +193,8 @@ class Model():
         print(f"Training Completed for {epochs} epochs.")
 
 
+
+
     def infer_a_random_sample(self):
         
         try:
@@ -192,6 +206,39 @@ class Model():
             transforms.Resize((224, 224)),
             transforms.ToTensor(),
         ])
+
+        with open('Path_to_test_csv_file', newline='') as csvfile:
+            csvreader = csv.reader(csvfile, delimiter=',', quotechar='|')
+            rows = list(csvreader)
+            random_row = random.choice(rows)
+            path = random_row[0]
+            label = random_row[1]
+
+            image = Image.open(path)
+            imageT = transform(image).unsqueeze(0).to(DEVICE)
+            outputs = self.model(imageT)
+            pred = outputs.argmax(1)
+            pred_label = self.classes[pred.item()]
+            print(pred_label)
+            print(label)
+
+            draw = ImageDraw.Draw(image)
+            draw.text((image.width - 200, 0), f"Real: {label}", fill='red')
+            draw.text((image.width - 200, 20), f"Predicted: {pred_label}", fill='blue')
+            image.save(f"test_samples/{MODEL_NAME}/{label} -> {pred_label}.jpg")
+            print("Saved a sample")
+
+
+
+        def infer_a_sample(self, image):
+
+            image = image.to(DEVICE)
+            self.model.eval()
+            # Forward pass the image through the model.
+            prediction = nn.Softmax(dim=1)(self.model(image)).max(1)
+            class_prob, class_index = round(prediction.values.item(), 3), prediction.indices.item()
+            class_name = self.classes[class_index]
+            return f'{class_name}: {class_prob*100}%'
 
 
 
